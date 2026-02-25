@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artisan Vault - Artist Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C2416;
+            --secondary: #8B7355;
+            --accent: #D4A574;
+            --light: #F5F1EB;
+            --white: #FFFFFF;
+            --shadow: rgba(44, 36, 22, 0.1);
+            --shadow-strong: rgba(44, 36, 22, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--light);
+            color: var(--primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 20px var(--shadow);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.15), rgba(139, 115, 85, 0.1));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.2), transparent);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-30px, 30px) rotate(5deg); }
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .hero-image {
+            animation: fadeInRight 1s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 20px 20px 60px var(--shadow-strong);
+        }
+
+        /* Dashboard Section */
+        .dashboard {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .dashboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.8rem 2rem;
+            background: var(--white);
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-radius: 50px;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .tab:hover:not(.active) {
+            border-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Upload Form */
+        .upload-form {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.9rem;
+            border: 2px solid #E5E1DA;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--accent);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(212, 165, 116, 0.05);
+        }
+
+        .file-upload:hover {
+            background: rgba(212, 165, 116, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px var(--shadow-strong);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--light), #E5E1DA);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(212, 165, 116, 0.1));
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            flex: 1;
+        }
+
+        /* Orders Table */
+        .orders-table {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--light);
+            transition: background 0.3s;
+        }
+
+        tbody tr:hover {
+            background: rgba(212, 165, 116, 0.05);
+        }
+
+        .status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status.pending {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .status.processing {
+            background: #D1ECF1;
+            color: #0C5460;
+        }
+
+        .status.shipped {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .status.delivered {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px var(--shadow);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow-strong);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .stat-label {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 3rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--white);
+                flex-direction: column;
+                padding: 2rem;
+                transition: left 0.3s;
+                box-shadow: 0 5px 20px var(--shadow);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .orders-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .upload-form {
+                padding: 1.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a class="navbar-brand" href="#"><img src="assets/images/logo1.jpeg" height="60px" width="80px"> </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#marketplace">Marketplace</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Your Art, Your Price, Your Success</h1>
+                <p>Join the premier marketplace for sculptors and artists. Upload your masterpieces, set your prices, and connect with collectors worldwide.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="scrollToDashboard()">Start Selling</button>
+                    <button class="btn btn-secondary" onclick="scrollToDashboard()">View Dashboard</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=600&h=400&fit=crop" alt="Art Gallery" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'400\'%3E%3Crect fill=\'%23F5F1EB\' width=\'600\' height=\'400\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Cormorant Garamond\' font-size=\'24\' fill=\'%238B7355\'%3EArtwork Gallery%3C/text%3E%3C/svg%3E'">
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard">
+        <h2 class="section-title">Artist Dashboard</h2>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalProducts">0</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value">$<span id="totalRevenue">0</span></div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">4.8</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab active" onclick="switchTab('upload')">Upload Product</button>
+            <button class="tab" onclick="switchTab('products')">My Products</button>
+            <button class="tab" onclick="switchTab('orders')">Manage Orders</button>
+            <button class="tab" onclick="switchTab('analytics')">Analytics</button>
+        </div>
+
+        <!-- Upload Tab -->
+        <div class="tab-content active" id="upload">
+            <form class="upload-form" id="productForm">
+                <h3 style="margin-bottom: 2rem; font-size: 2rem;">Upload Your Artwork</h3>
+                
+                <div class="form-group full-width">
+                    <label>Product Images</label>
+                    <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFileSelect(event)">
+                        <p style="color: var(--secondary);">📸 Click to upload images</p>
+                        <small style="color: var(--secondary);">Support: JPG, PNG (Max 5MB)</small>
+                        <div id="filePreview" style="margin-top: 1rem;"></div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="productName" required placeholder="e.g., Bronze Warrior Statue">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="category" required>
+                            <option value="">Select Category</option>
+                            <option value="sculpture">Sculpture</option>
+                            <option value="painting">Painting</option>
+                            <option value="pottery">Pottery</option>
+                            <option value="woodwork">Woodwork</option>
+                            <option value="metalwork">Metalwork</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price ($) *</label>
+                        <input type="number" id="price" required placeholder="0.00" step="0.01" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Stock Quantity *</label>
+                        <input type="number" id="stock" required placeholder="1" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dimensions</label>
+                        <input type="text" id="dimensions" placeholder="e.g., 12 x 8 x 6 inches">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Weight</label>
+                        <input type="text" id="weight" placeholder="e.g., 5 lbs">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Description *</label>
+                        <textarea id="description" required placeholder="Describe your artwork, materials used, inspiration, etc."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" id="tags" placeholder="e.g., modern, abstract, bronze">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    🚀 Upload Product
+                </button>
+            </form>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="tab-content" id="products">
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="tab-content" id="orders">
+            <div class="orders-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Sample orders -->
+                        <tr>
+                            <td>#ORD-001</td>
+                            <td>Bronze Warrior</td>
+                            <td>John Smith</td>
+                            <td>$1,250</td>
+                            <td>2024-03-15</td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td>
+                                <select onchange="updateOrderStatus(this, 'ORD-001')" style="padding: 0.4rem; border-radius: 4px; border: 1px solid var(--light);">
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-002</td>
+                            <td>Abstract Flow</td>
+                            <td>Sarah Johnson</td>
+                            <td>$890</td>
+                            <td>2024-03-14</td>
+                            <td><span class="status shipped">Shipped</span></td>
+                            <td>
+                                <select onchange="updateOrderStatus(this, 'ORD-002')" style="padding: 0.4rem; border-radius: 4px; border: 1px solid var(--light);">
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="shipped" selected>Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="tab-content" id="analytics">
+            <div style="background: var(--white); padding: 3rem; border-radius: 12px; box-shadow: 0 5px 20px var(--shadow); text-align: center;">
+                <h3 style="font-size: 2rem; margin-bottom: 2rem;">Sales Analytics</h3>
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(139, 115, 85, 0.1)); border-radius: 8px;">
+                    <div>
+                        <p style="font-size: 4rem; margin-bottom: 1rem;">📈</p>
+                        <p style="color: var(--secondary); font-size: 1.2rem;">Your sales chart will appear here</p>
+                        <p style="color: var(--secondary); margin-top: 1rem;">Track your performance over time</p>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                    <div>
+                        <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">↑ 24%</p>
+                        <p style="color: var(--secondary);">Sales Growth</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">156</p>
+                        <p style="color: var(--secondary);">Total Views</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">92%</p>
+                        <p style="color: var(--secondary);">Customer Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Artisan Vault</h3>
+                <p style="color: var(--light); margin-top: 1rem;">Empowering artists to showcase and sell their masterpieces to the world.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Seller Guide</a></li>
+                    <li><a href="#">Pricing Guide</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Pinterest</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Artisan Vault. All rights reserved. | Crafted for Artists</p>
+        </div>
+    </footer>
+
+    <script>
+        // Store products in local storage
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+
+        // Navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update active tab button
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update active content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+
+            // Refresh products grid when switching to products tab
+            if (tabName === 'products') {
+                displayProducts();
+            }
+        }
+
+        // File selection handling
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            const preview = document.getElementById('filePreview');
+            preview.innerHTML = '';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    img.style.margin = '5px';
+                    img.style.display = 'inline-block';
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Product form submission
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('productName').value,
+                category: document.getElementById('category').value,
+                price: parseFloat(document.getElementById('price').value),
+                stock: parseInt(document.getElementById('stock').value),
+                dimensions: document.getElementById('dimensions').value,
+                weight: document.getElementById('weight').value,
+                description: document.getElementById('description').value,
+                tags: document.getElementById('tags').value,
+                date: new Date().toLocaleDateString()
+            };
+
+            products.push(product);
+            localStorage.setItem('products', JSON.stringify(products));
+
+            // Update statistics
+            updateStatistics();
+
+            // Show success message
+            alert('✅ Product uploaded successfully!');
+
+            // Reset form
+            this.reset();
+            document.getElementById('filePreview').innerHTML = '';
+
+            // Switch to products tab
+            switchTab('products');
+            document.querySelectorAll('.tab').forEach((tab, index) => {
+                tab.classList.remove('active');
+                if (index === 1) tab.classList.add('active');
+            });
+        });
+
+        // Display products
+        function displayProducts() {
+            const grid = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--secondary);">
+                        <p style="font-size: 3rem; margin-bottom: 1rem;">🎨</p>
+                        <p style="font-size: 1.2rem;">No products uploaded yet</p>
+                        <p style="margin-top: 0.5rem;">Start by uploading your first masterpiece!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        🎨
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p style="color: var(--secondary); font-size: 0.9rem; margin: 0.5rem 0;">
+                            ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+                        </p>
+                        <p class="product-price">$${product.price.toFixed(2)}</p>
+                        <p style="color: var(--secondary); font-size: 0.85rem;">
+                            Stock: ${product.stock} | ${product.date}
+                        </p>
+                        <div class="product-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editProduct(${product.id})">
+                                ✏️ Edit
+                            </button>
+                            <button class="btn btn-primary btn-small" onclick="deleteProduct(${product.id})">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit product
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                document.getElementById('productName').value = product.name;
+                document.getElementById('category').value = product.category;
+                document.getElementById('price').value = product.price;
+                document.getElementById('stock').value = product.stock;
+                document.getElementById('dimensions').value = product.dimensions;
+                document.getElementById('weight').value = product.weight;
+                document.getElementById('description').value = product.description;
+                document.getElementById('tags').value = product.tags;
+
+                // Switch to upload tab
+                switchTab('upload');
+                document.querySelectorAll('.tab').forEach((tab, index) => {
+                    tab.classList.remove('active');
+                    if (index === 0) tab.classList.add('active');
+                });
+
+                // Delete the old product
+                deleteProduct(id, false);
+
+                // Scroll to form
+                document.getElementById('upload').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Delete product
+        function deleteProduct(id, confirm = true) {
+            if (confirm && !window.confirm('Are you sure you want to delete this product?')) {
+                return;
+            }
+
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('products', JSON.stringify(products));
+            displayProducts();
+            updateStatistics();
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            document.getElementById('totalProducts').textContent = products.length;
+            
+            const totalRevenue = products.reduce((sum, product) => sum + (product.price * product.stock), 0);
+            document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2);
+            
+            // For demo purposes, orders count is simulated
+            document.getElementById('totalOrders').textContent = Math.floor(products.length * 1.5);
+        }
+
+        // Update order status
+        function updateOrderStatus(select, orderId) {
+            const row = select.closest('tr');
+            const statusCell = row.querySelector('.status');
+            const newStatus = select.value;
+            
+            statusCell.className = `status ${newStatus}`;
+            statusCell.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+            
+            alert(`Order ${orderId} status updated to: ${newStatus}`);
+        }
+
+        // Scroll to dashboard
+        function scrollToDashboard() {
+            document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Initialize
+        displayProducts();
+        updateStatistics();
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.boxShadow = '0 2px 30px var(--shadow-strong)';
+            } else {
+                nav.style.boxShadow = '0 2px 20px var(--shadow)';
+            }
+        });
+    </script>
+</body>
+</html>
